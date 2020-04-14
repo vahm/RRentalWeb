@@ -14,6 +14,10 @@ namespace RRental.Web.Api.Data
     {
         protected override void Seed(ApplicationDbContext context)
         {
+            var customer = new Customer();
+            customer.CustomerName = "Default Customer";
+            customer.Id = Guid.NewGuid();
+            context.Customer.Add(customer);
                 if (!context.Inventory.Any())
                 {
                     Assembly assembly = Assembly.GetExecutingAssembly();
@@ -33,11 +37,10 @@ namespace RRental.Web.Api.Data
                             }
                         }
                     }
-                    context.SaveChanges();
-
-                    base.Seed(context);
                 }
-            //}
+                context.SaveChanges();
+
+                base.Seed(context);
         }
     }
 }

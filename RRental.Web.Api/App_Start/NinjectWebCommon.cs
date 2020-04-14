@@ -74,6 +74,7 @@ namespace RRental.Web.Api.App_Start
         {
             kernel.Bind<IInventoryRepository>().To<InventoryRepository>().InRequestScope();
             kernel.Bind<IOrderRepository>().To<OrderRepository>().InRequestScope();
+            kernel.Bind<ICustomerRepository>().To<CustomerRepository>().InRequestScope();
         }        
     }
 }

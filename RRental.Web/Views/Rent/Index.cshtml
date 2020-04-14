@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<input type="button" value="Add To Cart" id="send-data" class="btn btn-primary" />
+<input type="button" value="Add To Cart" id="send-data" class="btn btn-primary"/>
 
 @section scripts {
     <script type="text/javascript" lang="en">
@@ -52,13 +52,11 @@
                     rows.push(row);
                 });
 
-
                 $.post('@Url.Action("AddToCart", "Rent")',
                     { rows: rows },
                     function(data) {
                         console.log(data);
                     });
-
             });
         });
     </script>

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using RRental.Web.Api.Data;
+using RRental.Web.Api.Helper;
 using RRental.Web.Api.Models;
 
 namespace RRental.Web.Api.Controllers
@@ -24,13 +25,13 @@ namespace RRental.Web.Api.Controllers
         [Route("api/invoice/getinvoice/{cartNo}")]
         public IHttpActionResult Create(string cartNo)
         {
-            var cartData = db.Order;
+            var cartData = db.Order.Where(x => x.CartNo == cartNo);
             var cartDate = cartData.Where(x => x.CartNo == cartNo).Select(x => x.DateCreated)
                 .FirstOrDefault();
-
+            var customer = db.Customer.FirstOrDefault(x => x.Id == cartData.Select(y => y.Customer.Id).FirstOrDefault());
             List<InvoiceItems> invoice = new List<InvoiceItems>();
 
-            foreach (var item in cartData.Where(x => x.CartNo == cartNo))
+            foreach (var item in cartData)
             {
                 var itemName = db.Inventory.Where(x => x.Id == item.ItemId).Select(x => x.Name)
                     .FirstOrDefault();
@@ -42,6 +43,7 @@ namespace RRental.Web.Api.Controllers
                     items.ItemName = itemName;
                     items.RentDuration = duration;
                     items.RentPrice = CalculatePrice.Price(itemType, duration);
+                    items.BonusPoints = CalculatePoints.Calculate(itemType);
                 }
 
                 invoice.Add(items);
@@ -51,13 +53,20 @@ namespace RRental.Web.Api.Controllers
                 StreamWriter writer = new StreamWriter(stream);
                 writer.WriteLine("Invoice no: " + cartDate.Ticks);
                 writer.WriteLine("-------------------");
+                writer.WriteLine("Customer name: " + customer?.CustomerName + ", you have " + customer?.BonusPoints + " points");
                 writer.WriteLine("Equipment:");
                 writer.WriteLine("-------------------");
+                int priceSum = 0;
+                int pointsSum = 0;
                 foreach (var item in invoice)
                 {
                     writer.WriteLine(item.ItemName + "; " + item.RentDuration + " days; " + item.RentPrice + " €");
+                    priceSum += item.RentPrice;
+                    pointsSum += item.BonusPoints;
                 }
                 writer.WriteLine("-------------------");
+                writer.WriteLine("Total: " + priceSum + " €");
+                writer.WriteLine("Points earned: " + pointsSum);
                 writer.Flush();
                 writer.Close();
 
@@ -77,44 +86,6 @@ namespace RRental.Web.Api.Controllers
 
                 return response;
             }
-        }
-
-        public static class CalculatePrice
-        {
-            public static int Price(EquipmentType type, int duration)
-            {
-                int oneTimeFee = 100;
-                int dailyFeePremium = 60;
-                int dailyFeeRegular = 40;
-                int price = 0;
-                switch (type)
-                {
-                    case EquipmentType.HeavyEquipment:
-                        price = dailyFeePremium * duration + oneTimeFee;
-                        break;
-                    case EquipmentType.RegularEquipment:
-                        if (duration > 2)
-                        {
-                            price = dailyFeePremium * 2 + dailyFeeRegular * (duration - 2) + oneTimeFee;
-                        }
-                        else
-                        {
-                            price = dailyFeePremium * duration + oneTimeFee;
-                        }
-                        break;
-                    case EquipmentType.SpecializedEquipment:
-                        if (duration > 3)
-                        {
-                            price = dailyFeePremium * 3 + dailyFeeRegular * (duration - 3);
-                        }
-                        else
-                        {
-                            price = dailyFeePremium * duration;
-                        }
-                        break;
-                }
-                return price;
-            }
-        }
+        }      
     }
 }

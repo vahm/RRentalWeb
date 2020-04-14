@@ -28,8 +28,6 @@ namespace RRental.Web.Api.Migrations
                     using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
                     {
                         CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-                        //csv.Configuration.HeaderValidated = null;
-                        //csv.Configuration.MissingFieldFound = null;
                         var items = csv.GetRecords<Inventory>().ToArray();
                         foreach (Inventory item in items)
                         {
@@ -38,10 +36,13 @@ namespace RRental.Web.Api.Migrations
                         }
                     }
                 }
-                context.SaveChanges();
-
-                base.Seed(context);
             }
+            var customer = new Customer();
+            customer.CustomerName = "Default Customer";
+            customer.Id = Guid.NewGuid();
+            context.Customer.Add(customer);
+
+            context.SaveChanges();
         }
     }
 }

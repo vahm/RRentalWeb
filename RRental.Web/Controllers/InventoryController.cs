@@ -8,6 +8,7 @@ namespace RRental.Web.Controllers
 {
     public class InventoryController : Controller
     {
+        //TODO: add admin panel
         // GET: Inventory
         public ActionResult Index()
         {
@@ -23,23 +24,16 @@ namespace RRental.Web.Controllers
                 return View(new Inventory());
             else
             {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Inventories/" + id.ToString()).Result;
+                HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Inventories/" + id).Result;
                 return View(response.Content.ReadAsAsync<Inventory>().Result);
             }
         }
         [HttpPost]
-        public ActionResult AddOrEdit(Inventory emp)
+        public ActionResult AddOrEdit(Inventory item)
         {
-            if (emp.Id == null)
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("Employee", emp).Result;
-                TempData["SuccessMessage"] = "Saved Successfully";
-            }
-            else
-            {
-                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("Inventories/" + emp.Id, emp).Result;
+                HttpResponseMessage response = GlobalVariables.WebApiClient.PutAsJsonAsync("Inventories/" + item.Id, item).Result;
                 TempData["SuccessMessage"] = "Updated Successfully";
-            }
+            
             return RedirectToAction("Index");
         }
 
@@ -49,80 +43,5 @@ namespace RRental.Web.Controllers
             TempData["SuccessMessage"] = "Deleted Successfully";
             return RedirectToAction("Index");
         }
-
-        //// GET: Inventory/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
-
-        //// GET: Inventory/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //// POST: Inventory/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add insert logic here
-
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: Inventory/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: Inventory/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add update logic here
-
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: Inventory/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: Inventory/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add delete logic here
-
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
     }
 }

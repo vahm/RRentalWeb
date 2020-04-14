@@ -17,11 +17,10 @@ namespace RRental.Web.Controllers
 
         public IActionResult AddToCart(List<string> rows)
         {
-
             HttpResponseMessage response = GlobalVariables.WebApiClient.PostAsJsonAsync("Rent", rows).Result;
             TempData["SuccessMessage"] = "Saved Successfully";
-       
-            return RedirectToAction("Index","InvoiceController");
+
+            return View("Index");
         }
     }
 }

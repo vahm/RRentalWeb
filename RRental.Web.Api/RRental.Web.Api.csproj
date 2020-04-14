@@ -157,21 +157,33 @@
     <Compile Include="Controllers\RentController.cs" />
     <Compile Include="Data\ApplicationDbContext.cs" />
     <Compile Include="Data\ApplicationDbInitializer.cs" />
+    <Compile Include="Entities\Customer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\CalculatePoints.cs" />
+    <Compile Include="Helper\CalculatePrice.cs" />
+    <Compile Include="Interfaces\ICustomerRepository.cs" />
     <Compile Include="Interfaces\IOrderRepository.cs" />
     <Compile Include="Interfaces\IInventoryRepository.cs" />
     <Compile Include="Migrations\202004130656163_initialmigration.cs" />
     <Compile Include="Migrations\202004130656163_initialmigration.Designer.cs">
       <DependentUpon>202004130656163_initialmigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004140839364_customer.cs" />
+    <Compile Include="Migrations\202004140839364_customer.Designer.cs">
+      <DependentUpon>202004140839364_customer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202004140859280_ordertocustomer.cs" />
+    <Compile Include="Migrations\202004140859280_ordertocustomer.Designer.cs">
+      <DependentUpon>202004140859280_ordertocustomer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\CustomerPoints.cs" />
     <Compile Include="Entities\Inventory.cs" />
     <Compile Include="Models\Invoice.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Models\Repositories\InventoryRepository.cs" />
+    <Compile Include="Models\Repositories\CustomerRepository.cs" />
     <Compile Include="Models\Repositories\OrderRepository.cs" />
     <Compile Include="Models\EquipmentType.cs" />
     <Compile Include="Program.cs" />
@@ -180,6 +192,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202004130656163_initialmigration.resx">
       <DependentUpon>202004130656163_initialmigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004140839364_customer.resx">
+      <DependentUpon>202004140839364_customer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004140859280_ordertocustomer.resx">
+      <DependentUpon>202004140859280_ordertocustomer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Models\SeedData\InventoryData.csv" />
     <EmbeddedResource Include="Data\SeedData\InventoryData.csv" />

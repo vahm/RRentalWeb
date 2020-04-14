@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using RRental.Web.Api.Data;
 using RRental.Web.Api.Entities;
+using RRental.Web.Api.Helper;
 using RRental.Web.Api.Models;
 
 namespace RRental.Web.Api.Controllers
@@ -27,6 +28,7 @@ namespace RRental.Web.Api.Controllers
 
             var cartNo = DateTime.Now.Ticks.ToString();
             var dateCreated = DateTime.Now;
+            var customer = db.Customer.FirstOrDefault();  //TODO: add customer management
             foreach (var row in rows)
             {
                 var record = row.Split(';');
@@ -34,9 +36,13 @@ namespace RRental.Web.Api.Controllers
                 {
                     
                     var tempName = record[0];
-                    var orderModel = new Order {Id = Guid.NewGuid(),CartNo = cartNo, DateCreated = dateCreated};
+                    var orderModel = new Order {Id = Guid.NewGuid(),CartNo = cartNo, DateCreated = dateCreated, Customer = customer};
                     Guid id = db.Inventory.Where(y => y.Name == tempName).Select(y => y.Id)
                         .SingleOrDefault();
+                    var equipmentType = db.Inventory.Where(y => y.Name == tempName).Select(y => y.EquipmentType)
+                        .SingleOrDefault();
+                    var points = CalculatePoints.Calculate(equipmentType);
+                    customer.BonusPoints += points;
                     orderModel.ItemId = id;
                     orderModel.Duration = Int32.Parse(record[2]);
                     db.Order.Add(orderModel);
@@ -66,11 +72,6 @@ namespace RRental.Web.Api.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool OrderExists(Guid id)
-        {
-            return db.Order.Count(e => e.Id == id) > 0;
         }
     }
 }
