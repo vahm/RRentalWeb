@@ -1,0 +1,37 @@
+﻿@model IEnumerable<RRental.Web.Models.Order>
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Rental Orders</h2>
+<br />
+<div class="row">
+<div class="col-md-12">
+@using (Html.BeginForm("Create", "Invoice", FormMethod.Post))
+{
+    <table class="table table-condensed table-hover table-bordered" id="inventory-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Invoice</th>
+                <th>Download Invoice</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.DateCreated
+                    </td>
+                    <td>@item.CartNo</td>
+                    <td>@Html.ActionLink("Download", "Create", new { cartNo = item.CartNo })</td>
+                </tr>
+
+            }
+        </tbody>
+</table>
+}
+</div>
+</div>

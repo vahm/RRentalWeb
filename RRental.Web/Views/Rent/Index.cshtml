@@ -1,0 +1,66 @@
+﻿@model IEnumerable<RRental.Web.Models.Inventory>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Equipment Rental</h2>
+
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-condensed table-hover table-bordered" id="inventory-table">
+            <thead>
+                <tr>
+                    <th>Equipment Name</th>
+                    <th>Equipment Type</th>
+                    <th>Rent in Days</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.EquipmentType)
+                        </td>
+                        <td>
+                            @Html.TextBox("Duration", 0, new { @type = "number", min = "0", step = "1" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<input type="button" value="Add To Cart" id="send-data" class="btn btn-primary" />
+
+@section scripts {
+    <script type="text/javascript" lang="en">
+        $(document).ready(function() {
+            $('#send-data').click(function() {
+                var rows = [];
+                $('#inventory-table tbody tr').each(function() {
+                    var name = $(this).find('td').eq(0).text().trim();
+                    var type = $(this).find('td').eq(1).text().trim();
+                    var duration = $(this).find('td:eq(2) input').val();
+                    var row = name + ";" + type + ";" + duration;
+                    rows.push(row);
+                });
+
+
+                $.post('@Url.Action("AddToCart", "Rent")',
+                    { rows: rows },
+                    function(data) {
+                        console.log(data);
+                    });
+
+            });
+        });
+    </script>
+}
+

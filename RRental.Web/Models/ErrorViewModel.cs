@@ -1,5 +1,3 @@
-using System;
-
 namespace RRental.Web.Models
 {
     public class ErrorViewModel
