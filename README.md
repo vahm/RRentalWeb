@@ -4,4 +4,6 @@ Please note that this uses Asp.net Code First migration which means the database
 
 EntityFramework\update-database -project RRental.Web.Api
 
+For Swagger UI set the RRental.Web.Api project properties to Start Url "swagger".
+
 
