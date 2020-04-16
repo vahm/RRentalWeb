@@ -28,6 +28,8 @@ namespace RRental.Web.Api.Migrations
                     using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
                     {
                         CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+                        csv.Configuration.HeaderValidated = null;
+                        csv.Configuration.MissingFieldFound = null;
                         var items = csv.GetRecords<Inventory>().ToArray();
                         foreach (Inventory item in items)
                         {
